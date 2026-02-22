@@ -1,17 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorResHandler } from '../utils/responseHandlers';
-
-/**
- * Dummy token for development.
- * Replace with real JWT / OAuth validation in production.
- */
-const VALID_TOKEN = 'dummy-secret-token-2024';
+import {VALID_TOKEN} from '../constants/constants';
 
 /**
  * Middleware: validates Bearer token from the Authorization header.
- *
- * Expected header format:
- *   Authorization: Bearer <token>
  */
 export function authMiddleware(
   req: Request,

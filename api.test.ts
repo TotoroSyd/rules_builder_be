@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Server } from 'http';
-import app from '../src/app';
+import app from './app';
 
 // ─── Setup ────────────────────────────────────────────────────────────────────
 

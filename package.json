@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "test": "ts-node tests/api.test.ts",
-    "lint": "eslint 'src/**/*.ts' 'tests/**/*.ts'"
+    "dev": "ts-node-dev --respawn --transpile-only ./server.ts",
+    "test": "ts-node ./api.test.ts",
+    "lint": "eslint './**/*.ts' './**/*.ts'"
   },
   "dependencies": {
     "axios": "^1.6.7",

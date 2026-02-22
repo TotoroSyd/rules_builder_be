@@ -47,7 +47,7 @@ export interface Rule {
 export interface SavedRule {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   rule: Rule;
   created_at: string;
 }
@@ -63,7 +63,8 @@ export interface CreateRuleRequestBody {
 }
 
 // ─── Response util types ──────────────────────────────────────────────────────
-
+// T is a generic type as a placeholder, it can be replaced with any specific type depending on the context
+// unknown is a default incase no specific type is declared
 export interface ApiSuccessPayload<T = unknown> {
   success: true;
   data: T;

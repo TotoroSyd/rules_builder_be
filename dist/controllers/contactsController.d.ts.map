@@ -1,0 +1,1 @@
+{"version":3,"file":"contactsController.d.ts","sourceRoot":"","sources":["../../controllers/contactsController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAI5C,qBAAa,kBAAkB;IACd,WAAW,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,GAAG,OAAO,CAAC,IAAI,CAAC;CAsBvE"}

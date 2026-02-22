@@ -1,18 +1,25 @@
 import express, { Request, Response, NextFunction } from 'express';
-import routes from './routes';
-import { authMiddleware } from './middleware/auth';
+// import routes from './routes';
+import { authMiddleware } from './middeware/auth';
 import { ErrorResHandler } from './utils/responseHandlers';
+import { ContactsController } from './controllers/contactsController';
+import { healthCheck } from './utils/healthCheck';
+import { RulesController } from './controllers/rulesControlle';
 
 const app = express();
 
 app.use(express.json());
+const contactController = new ContactsController();
+const rulesController = new RulesController();
 
 // ─── Public routes (no auth) ──────────────────────────────────────────────────
-app.use('/health', routes);
+app.get('/health', healthCheck);
 
 // ─── Protected routes (require Bearer token) ──────────────────────────────────
-app.use('/evaluate', authMiddleware, routes);
-app.use('/rules',    authMiddleware, routes);
+app.post('/evaluate', authMiddleware, (req: Request, res: Response) => contactController.getContacts(req, res));
+app.get('/rules', authMiddleware, (req: Request, res: Response) => rulesController.getRules(req, res));
+app.post('/rules', authMiddleware, (req: Request, res: Response) => rulesController.createRule(req, res));
+app.delete('/rules/:id', authMiddleware, (req: Request, res: Response) => rulesController.deleteRule(req, res));
 
 // ─── 404 ──────────────────────────────────────────────────────────────────────
 app.use((req: Request, res: Response) => {

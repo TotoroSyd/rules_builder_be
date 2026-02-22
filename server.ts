@@ -1,13 +1,13 @@
 import app from './app';
+import { contacts } from './constants/contacts';
 
 const PORT = Number(process.env.PORT) || 3000;
 
 app.listen(PORT, () => {
-  console.log(`\n🚀  Monitoring API (TypeScript) running on http://localhost:${PORT}\n`);
-  console.log('Endpoints:');
-  console.log('  POST   /evaluate       — evaluate an ad-hoc rule');
-  console.log('  GET    /rules          — list all saved rules');
-  console.log('  POST   /rules          — save a new rule');
-  console.log('  DELETE /rules/:id      — delete a saved rule');
-  console.log('  GET    /health         — health check\n');
+  console.log(`\n🚀  Server is running on http://localhost:${PORT}\n`);
+
+  // Auto-run health check on startup
+  const contactCount = contacts?.length;
+  const status = contactCount > 0 ? '✅ ok' : '⚠️  degraded';
+  console.log(`📊 Health Check: ${status} (${contactCount} contacts loaded) at ${new Date().toISOString()}\n`);
 });

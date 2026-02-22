@@ -1,4 +1,4 @@
-import { Contact } from './types';
+import { Contact } from '../types';
 
 export const contacts: Contact[] = [
   { id: 'c001', name: 'Alice Johnson',  email: 'alice@acme.com',       country: 'US', signupDate: '2022-03-15', purchaseCount: 12, plan: 'pro'        },

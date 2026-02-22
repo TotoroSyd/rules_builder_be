@@ -20,6 +20,7 @@ export function SuccessResHandler<T>(
     data,
     ...(message ? { message } : {}),
   };
+  console.info(`Response: ${status} - ${message ?? 'No message'} - Payload:`, data);
   res.status(status).json(payload);
 }
 
@@ -42,5 +43,6 @@ export function ErrorResHandler(
     error,
     ...(details?.length ? { details } : {}),
   };
+  console.error(`Error: ${status} - ${error} - Details:`, details);
   res.status(status).json(payload);
 }
