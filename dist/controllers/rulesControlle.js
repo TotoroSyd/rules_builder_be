@@ -46,7 +46,11 @@ class RulesController {
         }
     }
     async deleteRule(req, res) {
-        const { id } = req?.params;
+        const { id } = req?.body;
+        if (!id) {
+            (0, responseHandlers_1.ErrorResHandler)(res, 'Validation failed', 400, ['id is required']);
+            return;
+        }
         try {
             const index = this.rulesStore.findIndex(rule => rule.id === id);
             if (index === -1) {
