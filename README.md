@@ -5,8 +5,8 @@ npm install
 npm run build
 npm run dev
 ```
-
-Server starts on **http://localhost:3000** (override with `PORT` env var).
+Deployed server starts on https://rulesbuilderbe.up.railway.app/
+Local server starts on **http://localhost:3000** (override with `PORT` env var).
 
 ---
 
