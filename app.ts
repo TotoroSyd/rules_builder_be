@@ -19,7 +19,7 @@ app.get('/health', healthCheck);
 app.post('/evaluate', authMiddleware, (req: Request, res: Response) => contactController.getContacts(req, res));
 app.get('/rules', authMiddleware, (req: Request, res: Response) => rulesController.getRules(req, res));
 app.post('/rules', authMiddleware, (req: Request, res: Response) => rulesController.createRule(req, res));
-app.delete('/rules/:id', authMiddleware, (req: Request, res: Response) => rulesController.deleteRule(req, res));
+app.delete('/rules', authMiddleware, (req: Request, res: Response) => rulesController.deleteRule(req, res));
 
 // ─── 404 ──────────────────────────────────────────────────────────────────────
 app.use((req: Request, res: Response) => {

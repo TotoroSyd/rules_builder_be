@@ -49,7 +49,12 @@ export class RulesController {
     }
 
     public async deleteRule(req: Request, res: Response): Promise<void> {
-        const { id } = req?.params;
+        const { id } = req?.body;
+        if (!id) {
+            ErrorResHandler(res, 'Validation failed', 400, ['id is required']);
+            return;
+        }
+        
         try {
             const index = this.rulesStore.findIndex(rule => rule.id === id);
             if (index === -1) {

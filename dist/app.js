@@ -20,7 +20,7 @@ app.get('/health', healthCheck_1.healthCheck);
 app.post('/evaluate', auth_1.authMiddleware, (req, res) => contactController.getContacts(req, res));
 app.get('/rules', auth_1.authMiddleware, (req, res) => rulesController.getRules(req, res));
 app.post('/rules', auth_1.authMiddleware, (req, res) => rulesController.createRule(req, res));
-app.delete('/rules/:id', auth_1.authMiddleware, (req, res) => rulesController.deleteRule(req, res));
+app.delete('/rules', auth_1.authMiddleware, (req, res) => rulesController.deleteRule(req, res));
 // ─── 404 ──────────────────────────────────────────────────────────────────────
 app.use((req, res) => {
     (0, responseHandlers_1.ErrorResHandler)(res, `Route ${req.method} ${req.path} not found`, 404);
