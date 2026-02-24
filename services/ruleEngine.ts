@@ -25,7 +25,10 @@ function evaluateRule(contact: Contact, rule: Rule): boolean {
 export function matchContacts(rule: Rule): Contact[] {
   return contacts.filter(contact => {
     try { return evaluateRule(contact, rule); }
-    catch { return false; }
+    catch (e) {
+      console.error(`[matchContacts] error evaluating contact ${contact.id}:`, e);
+      return false;
+    }
   });
 }
 
