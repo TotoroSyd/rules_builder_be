@@ -5,10 +5,24 @@ import { SavedRule } from "../types";
 import { SuccessResHandler, ErrorResHandler } from "../utils/responseHandlers";
 
 export class RulesController {
-    private rulesStore: SavedRule[] = [];
+    private rulesStore: SavedRule[] = [
+        {
+            id: uuidv4(),
+            name: 'Rule #1',
+            description: 'Contacts on the pro plan based in the US',
+            rule: {
+                logic: 'AND',
+                conditions: [
+                    { field: 'country', operator: 'is', value: 'US' },
+                    { field: 'plan', operator: 'is', value: 'pro' },
+                ],
+            },
+            created_at: new Date().toISOString(),
+        },
+    ];
     
     public async createRule(req: Request, res: Response): Promise<void> {
-        const { name, description, rule } = req?.body;
+        const { name, description, rule } = req.body;
         
         if (!name) {
             ErrorResHandler(res, 'Validation failed', 400, ['name is required']);
@@ -49,7 +63,7 @@ export class RulesController {
     }
 
     public async deleteRule(req: Request, res: Response): Promise<void> {
-        const { id } = req?.body;
+        const { id } =  req.body;
         if (!id) {
             ErrorResHandler(res, 'Validation failed', 400, ['id is required']);
             return;

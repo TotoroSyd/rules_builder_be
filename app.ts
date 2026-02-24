@@ -1,14 +1,25 @@
 import express, { Request, Response, NextFunction } from 'express';
 // import routes from './routes';
-import { authMiddleware } from './middeware/auth';
+import { authMiddleware } from './middleware/auth';
 import { ErrorResHandler } from './utils/responseHandlers';
 import { ContactsController } from './controllers/contactsController';
 import { healthCheck } from './utils/healthCheck';
-import { RulesController } from './controllers/rulesControlle';
+import { RulesController } from './controllers/rulesController';
 
 const app = express();
 
 app.use(express.json());
+// fix CORS preflight issue Error: 404 - Route OPTIONS /evaluate not found - Details: undefined 
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+  next();
+});
 const contactController = new ContactsController();
 const rulesController = new RulesController();
 

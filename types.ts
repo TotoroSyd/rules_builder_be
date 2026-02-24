@@ -14,11 +14,11 @@ export interface Contact {
 
 // ─── Operators (field-specific) ───────────────────────────────────────────────
 
-export type EmailOperator       = 'email-contains' | 'email-not-contains';
-export type CountryOperator     = 'country-is' | 'country-is-not';
-export type SignupDateOperator  = 'date-before' | 'date-after';
-export type PurchaseOperator    = 'count-equals' | 'count-gt' | 'count-lt';
-export type PlanOperator        = 'plan-is' | 'plan-is-not';
+export type EmailOperator       = 'contains' | 'not-contains';
+export type CountryOperator     = 'is' | 'is-not';
+export type SignupDateOperator  = 'before' | 'after';
+export type PurchaseOperator    = 'equals' | 'greater-than' | 'less-than';
+export type PlanOperator        = 'is' | 'is-not';
 
 export type Operator =
   | EmailOperator

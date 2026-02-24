@@ -16,4 +16,6 @@ export const contacts: Contact[] = [
   { id: 'c013', name: 'Maya Stern',     email: 'maya@massive.io',       country: 'DE', signupDate: '2022-01-20', purchaseCount: 18, plan: 'pro'        },
   { id: 'c014', name: 'Noah Williams',  email: 'noah@umbrella.co',      country: 'AU', signupDate: '2020-12-31', purchaseCount: 66, plan: 'enterprise' },
   { id: 'c015', name: 'Olivia Scott',   email: 'olivia@hooli.net',      country: 'US', signupDate: '2023-03-28', purchaseCount: 9,  plan: 'starter'    },
+  { id: 'c016', name: 'Pauline Adams',  email: 'pauline@acme.com',      country: 'US', signupDate: '2022-11-10', purchaseCount: 4,  plan: 'free'       },
+  { id: 'c017', name: 'Quinn Davis',    email: 'quinn@pied.com',        country: 'US', signupDate: '2021-07-15', purchaseCount: 15, plan: 'pro'        },
 ];

@@ -15,33 +15,29 @@ type OperatorFn = (fieldValue: FieldValue, conditionValue: ConditionValue) => bo
 
 export const OPERATORS: Record<Operator, OperatorFn> = {
   // Email
-  'email-contains':     (a, b) => String(a).toLowerCase().includes(String(b).toLowerCase()),
-  'email-not-contains': (a, b) => !String(a).toLowerCase().includes(String(b).toLowerCase()),
+  'contains':     (a, b) => String(a).toLowerCase().includes(String(b).toLowerCase()),
+  'not-contains': (a, b) => !String(a).toLowerCase().includes(String(b).toLowerCase()),
 
-  // Country
-  'country-is':     (a, b) => String(a).toLowerCase() === String(b).toLowerCase(),
-  'country-is-not': (a, b) => String(a).toLowerCase() !== String(b).toLowerCase(),
+  // Country, Plan
+  'is':     (a, b) => String(a).toLowerCase() === String(b).toLowerCase(),
+  'is-not': (a, b) => String(a).toLowerCase() !== String(b).toLowerCase(),
 
   // Signup date (ISO string comparison is lexicographically safe for yyyy-mm-dd)
-  'date-before': (a, b) => new Date(String(a)) < new Date(String(b)),
-  'date-after':  (a, b) => new Date(String(a)) > new Date(String(b)),
+  'before': (a, b) => new Date(String(a)) < new Date(String(b)),
+  'after':  (a, b) => new Date(String(a)) > new Date(String(b)),
 
   // Purchase count
-  'count-equals': (a, b) => Number(a) === Number(b),
-  'count-gt':     (a, b) => Number(a) >  Number(b),
-  'count-lt':     (a, b) => Number(a) <  Number(b),
-
-  // Plan
-  'plan-is':     (a, b) => String(a).toLowerCase() === String(b).toLowerCase(),
-  'plan-is-not': (a, b) => String(a).toLowerCase() !== String(b).toLowerCase(),
+  'equals': (a, b) => Number(a) === Number(b),
+  'greater-than':     (a, b) => Number(a) >  Number(b),
+  'less-than':     (a, b) => Number(a) <  Number(b),
 };
 
 // ─── Field → allowed operators map (for validation) ───────────────────────────
 
 export const FIELD_OPERATORS: Partial<Record<keyof Contact, Operator[]>> = {
-  email:         ['email-contains', 'email-not-contains'],
-  country:       ['country-is', 'country-is-not'],
-  signupDate:    ['date-before', 'date-after'],
-  purchaseCount: ['count-equals', 'count-gt', 'count-lt'],
-  plan:          ['plan-is', 'plan-is-not'],
+  email:         ['contains', 'not-contains'],
+  country:       ['is', 'is-not'],
+  signupDate:    ['before', 'after'],
+  purchaseCount: ['equals', 'greater-than', 'less-than'],
+  plan:          ['is', 'is-not'],
 };
