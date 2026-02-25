@@ -15,11 +15,18 @@ function evaluateCondition(contact: Contact, condition: Condition): boolean {
 }
 
 function evaluateRule(contact: Contact, rule: Rule): boolean {
-  const { logic = 'AND', conditions } = rule;
-  if (!conditions.length) return false;
+  const { logic = 'AND', conditions, groups = [] } = rule;
+
+  const results: boolean[] = [
+    ...conditions.map(c => evaluateCondition(contact, c)),
+    ...groups.map(g => evaluateRule(contact, g)),
+  ];
+
+  if (!results.length) return false;
+
   return logic.toUpperCase() === 'OR'
-    ? conditions.some(c => evaluateCondition(contact, c))
-    : conditions.every(c => evaluateCondition(contact, c));
+    ? results.some(Boolean)
+    : results.every(Boolean);
 }
 
 export function matchContacts(rule: Rule): Contact[] {
@@ -33,6 +40,79 @@ export function matchContacts(rule: Rule): Contact[] {
 }
 
 // ─── Validation ───────────────────────────────────────────────────────────────
+
+function validateCondition(c: unknown, path: string, errors: string[]): void {
+  if (!c || typeof c !== 'object') {
+    errors.push(`${path}: must be an object`);
+    return;
+  }
+  const cond = c as Record<string, unknown>;
+  const field = cond['field'] as keyof Contact | undefined;
+  const operator = cond['operator'] as Operator | undefined;
+
+  if (!field) {
+    errors.push(`${path}: field is required`);
+  } else if (!Object.keys(contacts[0]).includes(field)) {
+    errors.push(`${path}: unknown field "${field}"`);
+  }
+
+  if (!operator) {
+    errors.push(`${path}: operator is required`);
+  } else if (!VALID_OPERATORS.includes(operator)) {
+    errors.push(`${path}: unknown operator "${operator}"`);
+  }
+
+  if (cond['value'] === undefined) {
+    errors.push(`${path}: value is required`);
+  } else if (field === 'plan' && !planOptions.includes(String(cond['value']).toLowerCase())) {
+    errors.push(`${path}: invalid value "${cond['value']}" for field "plan". Allowed: ${planOptions.join(', ')}`);
+  }
+
+  if (field && operator && VALID_OPERATORS.includes(operator)) {
+    const allowed = FIELD_OPERATORS[field];
+    if (allowed && !allowed.includes(operator)) {
+      errors.push(
+        `${path}: operator "${operator}" is not valid for field "${field}". ` +
+        `Allowed: ${allowed.join(', ')}`,
+      );
+    }
+  }
+}
+
+function validateGroup(group: unknown, path: string, errors: string[]): void {
+  if (!group || typeof group !== 'object' || Array.isArray(group)) {
+    errors.push(`${path}: must be a non-null object`);
+    return;
+  }
+  const g = group as Record<string, unknown>;
+
+  if (g['logic'] !== undefined) {
+    const logic = String(g['logic']).toUpperCase();
+    if (logic !== 'AND' && logic !== 'OR') {
+      errors.push(`${path}.logic: must be "AND" or "OR"`);
+    }
+  }
+
+  const hasConditions = Array.isArray(g['conditions']) && (g['conditions'] as unknown[]).length > 0;
+  const hasGroups = Array.isArray(g['groups']) && (g['groups'] as unknown[]).length > 0;
+
+  if (!hasConditions && !hasGroups) {
+    errors.push(`${path}: must have at least one condition or nested group`);
+    return;
+  }
+
+  if (Array.isArray(g['conditions'])) {
+    (g['conditions'] as unknown[]).forEach((c, i) =>
+      validateCondition(c, `${path}.conditions[${i}]`, errors),
+    );
+  }
+
+  if (Array.isArray(g['groups'])) {
+    (g['groups'] as unknown[]).forEach((sub, i) =>
+      validateGroup(sub, `${path}.groups[${i}]`, errors),
+    );
+  }
+}
 
 export function validateRule(body: unknown): string[] {
   const errors: string[] = [];
@@ -50,47 +130,23 @@ export function validateRule(body: unknown): string[] {
     }
   }
 
-  if (!Array.isArray(rule['conditions']) || (rule['conditions'] as unknown[]).length === 0) {
+  const hasConditions = Array.isArray(rule['conditions']) && (rule['conditions'] as unknown[]).length > 0;
+  const hasGroups = Array.isArray(rule['groups']) && (rule['groups'] as unknown[]).length > 0;
+
+  if (!Array.isArray(rule['conditions'])) {
+    errors.push('conditions must be an array');
+  } else if (!hasConditions && !hasGroups) {
     errors.push('conditions must be a non-empty array');
-  } else {
-    (rule['conditions'] as unknown[]).forEach((c, i) => {
-      if (!c || typeof c !== 'object') {
-        errors.push(`conditions[${i}]: must be an object`);
-        return;
-      }
-      const cond = c as Record<string, unknown>;
-      const field = cond['field'] as keyof Contact | undefined;
-      const operator = cond['operator'] as Operator | undefined;
+  } else if (hasConditions) {
+    (rule['conditions'] as unknown[]).forEach((c, i) =>
+      validateCondition(c, `conditions[${i}]`, errors),
+    );
+  }
 
-      if (!field) {
-        errors.push(`conditions[${i}]: field is required`);
-      } else if (!Object.keys(contacts[0]).includes(field)) {
-        errors.push(`conditions[${i}]: unknown field "${field}"`);
-      }
-
-      if (!operator) {
-        errors.push(`conditions[${i}]: operator is required`);
-      } else if (operator && !VALID_OPERATORS.includes(operator)) {
-        errors.push(`conditions[${i}]: unknown operator "${operator}"`);
-      }
-
-      if (cond['value'] === undefined) {
-        errors.push(`conditions[${i}]: value is required`);
-      } else if (field === 'plan' && !planOptions.includes(String(cond['value']).toLowerCase())) {
-        errors.push(`conditions[${i}]: invalid value "${cond['value']}" for field "plan". Allowed: ${planOptions.join(', ')}`);
-      }
-
-      // Validate operator is valid for the given field
-      if (field && operator && VALID_OPERATORS.includes(operator)) {
-        const allowed = FIELD_OPERATORS[field];
-        if (allowed && !allowed.includes(operator)) {
-          errors.push(
-            `conditions[${i}]: operator "${operator}" is not valid for field "${field}". ` +
-            `Allowed: ${allowed.join(', ')}`,
-          );
-        }
-      }
-    });
+  if (hasGroups) {
+    (rule['groups'] as unknown[]).forEach((g, i) =>
+      validateGroup(g, `groups[${i}]`, errors),
+    );
   }
 
   return errors;
