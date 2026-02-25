@@ -40,6 +40,7 @@ export interface Condition {
 export interface Rule {
   logic?: LogicOperator;
   conditions: Condition[];
+  groups?: Rule[];
 }
 
 // ─── Saved rule ───────────────────────────────────────────────────────────────
