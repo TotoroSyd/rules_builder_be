@@ -75,12 +75,17 @@ Evaluate a rule and return matching contacts.
 {
   "logic": "AND",
   "conditions": [
-    { "field": "country",  "operator": "is",           "value": "US" },
-    { "field": "plan",     "operator": "is",           "value": "pro" },
-    { "field": "email",    "operator": "contains",     "value": "@acme" },
-    { "field": "signupDate","operator": "after",       "value": "2021-01-01" },
-    { "field": "purchaseCount","operator": "greater-than","value": 5 }
-  ]
+    { "field": "country",  "operator": "is", "value": "US" },
+    { "field": "plan",     "operator": "is", "value": "pro" },
+  ],
+  "groups": [{
+    "logic": "OR",
+    "conditions": [
+      { "field": "signupDate","operator": "after", "value": "2021-01-01" },
+      { "field": "purchaseCount","operator": "greater-than","value": 5 }
+    ],
+    "groups": []
+  }]
 }
 ```
 
