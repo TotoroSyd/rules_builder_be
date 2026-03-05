@@ -2,7 +2,7 @@ import { Contact } from '../types';
 
 export const contacts: Contact[] = [
   { id: 'c001', name: 'Alice Johnson', email: 'alice@acme.com', country: 'US', signupDate: '2022-03-15', purchaseCount: 12, plan: 'pro'},
-  { id: 'c002', name: 'Bob Smith', email: 'bob@globex.com', country: 'UK', signupDate: '2023-07-22', purchaseCount: 2,  plan: 'free'},
+  { id: 'c002', name: 'Bob Smith', email: 'bob@globex.com', country: 'GB', signupDate: '2023-07-22', purchaseCount: 2,  plan: 'free'},
   { id: 'c003', name: 'Carol White', email: 'carol@initech.com', country: 'CA', signupDate: '2021-11-01', purchaseCount: 34, plan: 'enterprise'},
   { id: 'c004', name: 'David Lee', email: 'david@umbrella.co', country: 'US', signupDate: '2024-01-08', purchaseCount: 0,  plan: 'free'},
   { id: 'c005', name: 'Eva Martinez', email: 'eva@massive.io', country: 'MX', signupDate: '2023-05-19', purchaseCount: 8,  plan: 'starter'},

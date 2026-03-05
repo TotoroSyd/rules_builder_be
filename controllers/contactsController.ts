@@ -5,6 +5,7 @@ import { ErrorResHandler, SuccessResHandler } from '../utils/responseHandlers';
 export class ContactsController {
     public async getContacts(req: Request, res: Response): Promise<void> {
         const rule = req.body;
+        console.log('Received rule for evaluation:', req.body );
         const errors = validateRule(rule);
     
         if (errors.length) {
